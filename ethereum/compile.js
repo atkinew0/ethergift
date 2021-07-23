@@ -37,8 +37,8 @@ fs.ensureDirSync(buildPath);
 
 for (var contractName in output.contracts['ethergift.sol']) {
     fs.outputJSONSync(
-        path.resolve(buildPath, contractName.replace(":", "")+ "json" ),
-        output.contracts['ethergift.sol'][contractName].evm.bytecode.object
+        path.resolve(buildPath, contractName.replace(":", "")+ ".json" ),
+        output.contracts['ethergift.sol'][contractName]
     )
         
     

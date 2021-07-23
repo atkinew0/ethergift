@@ -4,7 +4,7 @@ pragma solidity ^0.8.6;
 contract Ethergift {
 
     address manager;
-    Gift[] giftlist;
+    Gift[] public giftlist;
 
     struct Gift {
         bytes32 password;
@@ -34,7 +34,7 @@ contract Ethergift {
     function withdraw(uint256 giftNumber, string memory password, address payable to) public {
 
         require(keccak256(abi.encode(password)) == giftlist[giftNumber].password, "Incorrect password");
-        require(giftlist[giftNumber].paid = false);
+        require(giftlist[giftNumber].paid == false);
 
         giftlist[giftNumber].paid = true;
 

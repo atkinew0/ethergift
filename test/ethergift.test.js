@@ -18,11 +18,9 @@ beforeEach(async () => {
 
     accounts = await web3.eth.getAccounts();
 
-    
-
 
     deployedContract = await new web3.eth.Contract(compiledContract.abi)
-    .deploy({data: compiledContract.evm.bytecode.object})
+    .deploy({data: compiledContract.evm.bytecode.object, arguments:[web3.utils.toWei("3","ether")] })
     .send({from: accounts[0], gas:"1000000"});
 
 

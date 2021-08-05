@@ -11,6 +11,7 @@
     "compile": "node ethereum/compile"
   },
   "dependencies": {
+    "@truffle/hdwallet-provider": "^1.4.1",
     "ganache": "^6.4.4",
     "ganache-cli": "^6.12.2",
     "ganache-core": "^2.13.2",
@@ -28,5 +29,4 @@
     "eslint": "7.31.0",
     "eslint-config-next": "11.0.1"
   }
-  
 }

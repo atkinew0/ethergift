@@ -4,6 +4,7 @@ pragma solidity ^0.8.6;
 contract Ethergift {
 
     address manager;
+    uint256 maxcontrib;   //in test version limit gifts to .01 ETH ( 10000000000000000 wei)
     Gift[] public giftlist;
 
     struct Gift {
@@ -12,12 +13,17 @@ contract Ethergift {
         bool paid;
     }
 
-    constructor() {
+    event Deposit(address indexed from, uint256 giftNumber);
+
+    constructor(uint256 max) {
+        maxcontrib = max;
         manager = msg.sender;
     }
 
 
-    function give(string memory password ) public payable returns( uint256 ) {
+    function give(string memory password ) public payable  {
+
+        require(msg.value <= maxcontrib, "In test version cannot contribute more than maxcontrib Eth ");
         
         Gift memory newgift;
         newgift.password = keccak256(abi.encode(password ));
@@ -27,7 +33,7 @@ contract Ethergift {
 
         giftlist.push(newgift);
 
-        return giftlist.length -1;
+        emit Deposit(msg.sender, giftlist.length -1);
         
     }
 

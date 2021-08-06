@@ -4,7 +4,7 @@ const compiled = require('./build/Ethergift.json');
 const config = require('../config.json');
 
 if(config.contract_address.length > 0){
-    console.log("Contract already deployed at address", config.contract_address);
+    console.log(`CANNOT DEPLOY: Contract already deployed at address ${config.contract_address} to deploy new contract, set contract_address to \"\" (empty string) in config.json  then run deploy` );
     process.exit();
 }
 

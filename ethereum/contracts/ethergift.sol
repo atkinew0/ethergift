@@ -11,6 +11,7 @@ contract Ethergift {
         bytes32 password;
         uint256 amt;
         bool paid;
+        address recipient;
     }
 
     event Deposit(address indexed from, uint256 giftNumber);
@@ -21,7 +22,7 @@ contract Ethergift {
     }
 
 
-    function give(string memory password ) public payable  {
+    function give(string memory password, address recipient ) public payable  {
 
         require(msg.value <= maxcontrib, "In test version cannot contribute more than maxcontrib Eth ");
         
@@ -30,6 +31,7 @@ contract Ethergift {
         
         newgift.paid = false;
         newgift.amt = msg.value;
+        newgift.recipient = recipient;
 
         giftlist.push(newgift);
 
@@ -41,6 +43,7 @@ contract Ethergift {
 
         require(keccak256(abi.encode(password)) == giftlist[giftNumber].password, "Incorrect password");
         require(giftlist[giftNumber].paid == false);
+        require(giftlist[giftNumber].recipient == msg.sender);
 
         giftlist[giftNumber].paid = true;
 

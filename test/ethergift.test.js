@@ -45,7 +45,7 @@ describe("Ether Gift Test", () => {
 
     it("Can make a gift", async () => {
 
-        const reason = await deployedContract.methods.give("ky77djus").send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("1","ether")})
+        const reason = await deployedContract.methods.give("ky77djus", accounts[1]).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("1","ether")})
 
        
 
@@ -65,9 +65,9 @@ describe("Ether Gift Test", () => {
 
     it("Can withdraw amount from a previously made gift", async () => {
 
-        await deployedContract.methods.give("ky77djus").send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("1","ether")})
+        await deployedContract.methods.give("ky77djus", accounts[1]).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("1","ether")})
 
-        await deployedContract.methods.withdraw(0, "ky77djus", accounts[1]).send({from:accounts[0], gas:"1000000"});
+        await deployedContract.methods.withdraw(0, "ky77djus", accounts[1]).send({from:accounts[1], gas:"1000000"});
 
         let balance = await web3.eth.getBalance(accounts[1]);
 
@@ -81,31 +81,31 @@ describe("Ether Gift Test", () => {
 
 
         //double deposit to there are technically 2 gifts on the contract worth 4 ETH total
-        await deployedContract.methods.give("ky77djus").send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("2","ether")})
+        await deployedContract.methods.give("ky77djus", accounts[1]).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("2","ether")})
 
-        await deployedContract.methods.give("ky77djus").send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("2","ether")})
+        await deployedContract.methods.give("ky77djus", accounts[1]).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("2","ether")})
 
         let contractbal = await web3.eth.getBalance(deployedContract.options.address)
         
 
         // try to cash in the same gift twice and make sure the balance only reflects one being given
-        await deployedContract.methods.withdraw(0, "ky77djus", accounts[2]).send({from:accounts[0], gas:"1000000"});
+        await deployedContract.methods.withdraw(0, "ky77djus", accounts[1]).send({from:accounts[1], gas:"1000000"});
 
         contractbal = await web3.eth.getBalance(deployedContract.options.address)
         
-        let balance = await web3.eth.getBalance(accounts[2]);
+        let balance = await web3.eth.getBalance(accounts[1]);
 
       
 
         try{
-            await deployedContract.methods.withdraw(0, "ky77djus", accounts[2]).send({from:accounts[0], gas:"1000000"});
+            await deployedContract.methods.withdraw(0, "ky77djus", accounts[1]).send({from:accounts[1], gas:"1000000"});
 
         }catch(e){
             console.log(e.message)
         }
 
 
-        balance = await web3.eth.getBalance(accounts[2]);
+        balance = await web3.eth.getBalance(accounts[1]);
 
         let ether = web3.utils.fromWei(balance, "ether");
         

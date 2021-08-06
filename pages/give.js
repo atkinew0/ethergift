@@ -1,27 +1,33 @@
 import React, {Component} from 'react';
-import { Form, Input, TextArea, Button } from 'semantic-ui-react';
+import { Form, Input, TextArea, Button, Container, Checkbox} from 'semantic-ui-react';
 import Head from 'next/head'
 import hookup from '../ethereum/contracts/hookup.js';
 import web3 from '../ethereum/contracts/web3.js';
 import config from '../config.json';
+import {Router} from '../routes.js';
+import Giftcard from '../pages/giftcard';
+import DateTimeForm from './date.js'
 
 
-
-class Give extends Component{
+class Give extends Component {
 
     state = {
         value:'',
         loading:false,
         errorMessage:'',
         password:'',
-        giftMessage:'',
+        message:'',
         giftNumber:-1,
         to:'',
         from:'',
         toError:'',
         fromError:'',
         amountError:'',
-        passwordError:''
+        passwordError:'',
+        addressError:'',
+        recipientAddress:'',
+        giftSent:false,
+        dateLocked:false
 
     };
 
@@ -49,6 +55,11 @@ class Give extends Component{
             error = true;
         }
 
+        if(!web3.utils.isAddress(this.state.recipientAddress)){
+            this.setState({addressError:"Recipient must be a valid Ethereum Address"})
+            error = true;
+        }
+
         return error;
 
 
@@ -61,35 +72,44 @@ class Give extends Component{
         this.setState({toError:'',
         fromError:'',
         amountError:'',
-        passwordError:''});
+        passwordError:'',
+        addressError:''});
 
-        
 
         if(this.validate()) return;
+
+
+        console.log("Valid inputs, submit")
+
 
         this.setState({loading:true, errorMessage:''})
         const contract = hookup(config.contract_address);
 
+
+        contract.events.Deposit((error, event) => {
+                
+            console.log("Event Deposit triggered!", event);
+            console.log("number should be set to", event.returnValues.giftNumber )
+            this.setState({giftNumber: event.returnValues.giftNumber});
+            
+        })
+
         try {
             const accounts = await web3.eth.getAccounts();
 
-            await contract.methods.give( this.state.password).send(
+           
+
+            await contract.methods.give( this.state.password, this.state.recipientAddress).send(
                 { from:accounts[0], value: web3.utils.toWei(this.state.value, 'ether') }
             )
 
-            console.log("this is lnw")
+            
 
             let gift;
 
-            contract.once('Deposit', (error, event) => {
-                gift = parseInt(event.returnValues.giftNumber);
-                console.log("Event Deposit triggered!", event);
-                console.log("number should be set to", event.returnValues.giftNumber )
-                this.setState({giftNumber: event.returnValues.giftNumber});
-                
-            })
+          
 
-            console.log("Gift of type ", typeof gift);
+            this.setState({giftSent:true});
             
 
 
@@ -102,11 +122,23 @@ class Give extends Component{
 
     }
 
+    renderCard(){
+
+        return(this.state.giftSent? <Giftcard propObj={this.state}/> : null);
+
+    }
+
+    renderDate(){
+
+        console.log("About to show datetimeform?", this.state.dateLocked)
+        return (this.state.dateLocked? <DateTimeForm/> : null);
+    }
+
 
     render(){
 
         return (
-            <div>
+            <Container>
                  <Head>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
                 </Head>
@@ -119,14 +151,25 @@ class Give extends Component{
 
                     </Form.Field>
                     <Form.Field error={!!this.state.toError}>
-                        <label>To:</label>
+                        <label>Recipients Name:</label>
                         <Input onChange={event => this.setState({from:event.target.value})} value={this.state.from}/>
+
+                    </Form.Field>
+                    <Form.Field error={!!this.state.toError}>
+                        <label>Recipients wallet address:</label>
+                        <Input onChange={event => this.setState({recipientAddress:event.target.value})} value={this.state.recipientAddress}/>
 
                     </Form.Field>
                     <Form.Field error={!!this.state.amountError}>
                         <label>Amount:</label>
                         < Input onChange={event => this.setState({value:event.target.value})} value={this.state.value} label="eth"/>
 
+                    </Form.Field>
+                    <Form.Field>
+                        <Checkbox 
+                        onChange={event => this.setState({dateLocked: !this.state.dateLocked})}
+                        slider label="Lock gift until future date?"/>
+                        {this.renderDate()}
                     </Form.Field>
                     <Form.Field error={!!this.state.passwordError}>
                         <label>Password (for recipient to unlock):</label>
@@ -145,7 +188,9 @@ class Give extends Component{
                 </Form>
                 
                 <h1>Gift Number: {this.state.giftNumber}</h1>
-            </div>
+                <h1>{this.state.errorMessage}</h1>
+                {this.renderCard()}
+            </Container>
         )
     }
 }

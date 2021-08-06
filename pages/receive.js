@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Head from 'next/head'
-import { Form, Input, TextArea, Button } from 'semantic-ui-react';
+import { Form, Input, TextArea, Button, Container } from 'semantic-ui-react';
 import hookup from '../ethereum/contracts/hookup.js';
 import web3 from '../ethereum/contracts/web3.js';
 import config from '../config.json';
@@ -75,8 +75,8 @@ class Receive extends Component{
     render(){
 
         return (
-            <div>
-                <div>
+            <Container>
+               
                  <Head>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
                 </Head>
@@ -106,8 +106,8 @@ class Receive extends Component{
                     
                 </Form>
                 
-            </div>
-            </div>
+           
+            </Container>
         )
     }
 }

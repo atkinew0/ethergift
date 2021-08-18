@@ -45,7 +45,11 @@ describe("Ether Gift Test", () => {
 
     it("Can make a gift", async () => {
 
-        const reason = await deployedContract.methods.give("ky77djus", accounts[1]).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("1","ether")})
+
+        let d = new Date("2020-01-01");
+        let unlocked = Math.floor( d.getTime()/1000);
+        
+        const reason = await deployedContract.methods.give("ky77djus", accounts[1], unlocked).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("1","ether")})
 
        
 
@@ -65,7 +69,10 @@ describe("Ether Gift Test", () => {
 
     it("Can withdraw amount from a previously made gift", async () => {
 
-        await deployedContract.methods.give("ky77djus", accounts[1]).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("1","ether")})
+        let d = new Date("2020-01-01");
+        let unlocked = Math.floor( d.getTime()/1000);
+
+        await deployedContract.methods.give("ky77djus", accounts[1], unlocked).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("1","ether")})
 
         await deployedContract.methods.withdraw(0, "ky77djus", accounts[1]).send({from:accounts[1], gas:"1000000"});
 
@@ -79,11 +86,14 @@ describe("Ether Gift Test", () => {
 
     it("Can only withdraw from a gift once", async () => {
 
+        let d = new Date("2020-01-01");
+        let unlocked = Math.floor( d.getTime()/1000);
+
 
         //double deposit to there are technically 2 gifts on the contract worth 4 ETH total
-        await deployedContract.methods.give("ky77djus", accounts[1]).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("2","ether")})
+        await deployedContract.methods.give("ky77djus", accounts[1], unlocked).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("2","ether")})
 
-        await deployedContract.methods.give("ky77djus", accounts[1]).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("2","ether")})
+        await deployedContract.methods.give("ky77djus", accounts[1], unlocked).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("2","ether")})
 
         let contractbal = await web3.eth.getBalance(deployedContract.options.address)
         
@@ -110,6 +120,29 @@ describe("Ether Gift Test", () => {
         let ether = web3.utils.fromWei(balance, "ether");
         
         assert(ether >= 102 && ether <= 104);
+    })
+
+
+    it("Cannot withdraw a gift that is locked to a future date", async () => {
+
+        let d = new Date("2024-01-01");
+        let unlocked = Math.floor( d.getTime()/1000);
+
+        await deployedContract.methods.give("ky77djus", accounts[1], unlocked).send({from:accounts[0], gas:"1000000", value: web3.utils.toWei("1","ether")})
+
+        try{
+            await deployedContract.methods.withdraw(0, "ky77djus", accounts[1]).send({from:accounts[1], gas:"1000000"});
+
+        }catch(e){
+            console.log(e.message);
+        }
+
+        let balance = await web3.eth.getBalance(accounts[1]);
+
+        assert(balance > 0);
+        
+        
+
     })
 
 

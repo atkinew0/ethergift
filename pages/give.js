@@ -6,7 +6,7 @@ import web3 from '../ethereum/contracts/web3.js';
 import config from '../config.json';
 import {Router} from '../routes.js';
 import Giftcard from '../components/Giftcard';
-import DateTimeForm from './date.js'
+import DateTimeForm from '../components/Date.js'
 import Layout from '../components/Layout'
 
 
@@ -28,6 +28,7 @@ class Give extends Component {
         passwordError:'',
         addressError:'',
         recipientAddress:'',
+        unlockDate:0,
         giftSent:false,
         dateLocked:false
 
@@ -61,6 +62,7 @@ class Give extends Component {
             this.setState({addressError:"Recipient must be a valid Ethereum Address"})
             error = true;
         }
+
 
         return error;
 
@@ -100,7 +102,7 @@ class Give extends Component {
             const accounts = await web3.eth.getAccounts();
 
            
-            await contract.methods.give( this.state.password, this.state.recipientAddress).send(
+            await contract.methods.give( this.state.password, this.state.recipientAddress, this.state.unlockDate).send(
                 { from:accounts[0], value: web3.utils.toWei(this.state.value, 'ether') }
             )
 
@@ -127,7 +129,7 @@ class Give extends Component {
     renderDate(){
 
         console.log("About to show datetimeform?", this.state.dateLocked)
-        return (this.state.dateLocked? <DateTimeForm/> : null);
+        return (this.state.dateLocked? <DateTimeForm setState={(date)=>this.setState({unlockDate:date})}/> : null);
     }
 
 

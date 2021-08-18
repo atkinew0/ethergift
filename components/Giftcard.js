@@ -20,7 +20,8 @@ class GiftCard extends react.Component {
             <p>Message {this.props.propObj.message}</p>
             <h3>To: {this.props.propObj.to}</h3>
             <h3>From: {this.props.propObj.from}</h3>
-            <h3>Address: {this.props.propObj.recipientAddress}</h3>
+            <h3>Gift available after:{this.props.propObj.unlockDate}</h3>
+            <h3>Recipient Address: {this.props.propObj.recipientAddress}</h3>
             <h3>Gift #:{this.props.propObj.giftNumber}</h3>
             <h3>Gift amount: {this.props.propObj.value}</h3>
             <h3>Password: {this.props.propObj.password}</h3>

@@ -12,6 +12,7 @@ contract Ethergift {
         uint256 amt;
         bool paid;
         address recipient;
+        uint256 unlockTime;
     }
 
     event Deposit(address indexed from, uint256 giftNumber);
@@ -22,7 +23,7 @@ contract Ethergift {
     }
 
 
-    function give(string memory password, address recipient ) public payable  {
+    function give(string memory password, address recipient, uint256 unlockTime ) public payable  {
 
         require(msg.value <= maxcontrib, "In test version cannot contribute more than maxcontrib Eth ");
         
@@ -32,6 +33,7 @@ contract Ethergift {
         newgift.paid = false;
         newgift.amt = msg.value;
         newgift.recipient = recipient;
+        newgift.unlockTime = unlockTime;
 
         giftlist.push(newgift);
 
@@ -42,8 +44,9 @@ contract Ethergift {
     function withdraw(uint256 giftNumber, string memory password, address payable to) public {
 
         require(keccak256(abi.encode(password)) == giftlist[giftNumber].password, "Incorrect password");
-        require(giftlist[giftNumber].paid == false);
-        require(giftlist[giftNumber].recipient == msg.sender);
+        require(giftlist[giftNumber].paid == false, "Gift already received");
+        require(giftlist[giftNumber].recipient == msg.sender, "Gift can only be recieved by the recipient address");
+        require(block.timestamp > giftlist[giftNumber].unlockTime, "Gift not yet unlocked");
 
         giftlist[giftNumber].paid = true;
 

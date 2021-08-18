@@ -23,7 +23,7 @@ class Receive extends Component{
 
         let error = false;
 
-        if(this.state.giftNumber == "" || this.state.giftNumber < 0){
+        if(this.state.giftNumber === "" || this.state.giftNumber < 0){
             this.setState({numError:"Invalid gift number"})
             error = true;
         }

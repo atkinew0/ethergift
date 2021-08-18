@@ -20,9 +20,17 @@ import {
     }
    
     handleChange = (event, {name, value}) => {
+
+      console.log("In handlechange event is ", event, name, value)
       if (this.state.hasOwnProperty(name)) {
         this.setState({ [name]: value });
       }
+
+      console.log("state of date is now", this.state.date, this.state.time, this.state.dateTime, this.state.datesRange)
+
+      console.log("calling getdate")
+      let d = new Date(value);
+      this.props.setState(Math.floor(d.getTime()/1000));
     }
    
     render() {
@@ -34,13 +42,7 @@ import {
             value={this.state.date}
             iconPosition="left"
             onChange={this.handleChange}
-          />
-          <TimeInput
-            name="time"
-            placeholder="Time"
-            value={this.state.time}
-            iconPosition="left"
-            onChange={this.handleChange}
+            dateFormat={"YYYY-MM-DD"}
           />
         
         </Form>

@@ -4,6 +4,7 @@ import { Form, Input, TextArea, Button, Container } from 'semantic-ui-react';
 import hookup from '../ethereum/contracts/hookup.js';
 import web3 from '../ethereum/contracts/web3.js';
 import config from '../config.json';
+import Layout from "../components/Layout"
 
 
 
@@ -75,12 +76,12 @@ class Receive extends Component{
     render(){
 
         return (
-            <Container>
+            <Layout>
                
                  <Head>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
                 </Head>
-                <h1>Receive Ether</h1>
+                <h1 >Receive an Ether Gift</h1>
 
                 <Form error={!!this.state.errorMessage} onSubmit={this.onSubmit}>
                     <Form.Field error={this.state.numError}>
@@ -107,7 +108,7 @@ class Receive extends Component{
                 </Form>
                 
            
-            </Container>
+            </Layout>
         )
     }
 }

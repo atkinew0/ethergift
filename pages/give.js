@@ -5,8 +5,10 @@ import hookup from '../ethereum/contracts/hookup.js';
 import web3 from '../ethereum/contracts/web3.js';
 import config from '../config.json';
 import {Router} from '../routes.js';
-import Giftcard from '../pages/giftcard';
+import Giftcard from '../components/Giftcard';
 import DateTimeForm from './date.js'
+import Layout from '../components/Layout'
+
 
 
 class Give extends Component {
@@ -98,16 +100,10 @@ class Give extends Component {
             const accounts = await web3.eth.getAccounts();
 
            
-
             await contract.methods.give( this.state.password, this.state.recipientAddress).send(
                 { from:accounts[0], value: web3.utils.toWei(this.state.value, 'ether') }
             )
 
-            
-
-            let gift;
-
-          
 
             this.setState({giftSent:true});
             
@@ -138,11 +134,8 @@ class Give extends Component {
     render(){
 
         return (
-            <Container>
-                 <Head>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
-                </Head>
-                <h1>Give Ether</h1>
+            <Layout>
+                <h1 style={{marginLeft:"40%"}}>Give Ether</h1>
 
                 <Form error={!!this.state.errorMessage} onSubmit={this.onSubmit}>
                     <Form.Field error={!!this.state.toError}>
@@ -187,10 +180,9 @@ class Give extends Component {
                     
                 </Form>
                 
-                <h1>Gift Number: {this.state.giftNumber}</h1>
                 <h1>{this.state.errorMessage}</h1>
                 {this.renderCard()}
-            </Container>
+            </Layout>
         )
     }
 }

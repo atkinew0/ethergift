@@ -31,7 +31,7 @@ export default function Home() {
   const imgStyle = {
     width:"400px",
     position:"absolute",
-    left:"40px",
+    left:"160px",
     top:"40px",
     
     

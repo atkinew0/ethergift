@@ -14,3 +14,13 @@ a {
 * {
   box-sizing: border-box;
 }
+
+dt{
+  font-weight: bold;
+  font-size: 1.8em;
+}
+
+dd{
+  margin:10px;
+  font-size:1.2em;
+}

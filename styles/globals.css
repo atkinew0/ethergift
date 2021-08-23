@@ -15,9 +15,14 @@ a {
   box-sizing: border-box;
 }
 
+dl{
+  margin:50px;
+}
+
 dt{
   font-weight: bold;
   font-size: 1.8em;
+  margin:15px;
 }
 
 dd{

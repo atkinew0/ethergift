@@ -31,16 +31,17 @@ const menuStyle = {
 
 const imgStyle = {
     height:"65px",
-    float:"left"
+    float:"left",
+    cursor:"pointer"
     
 }
 
-export default () => {
+export default function Header() {
     return (
        <div style={gradStyle}>
 
 
-       <a href="/"><Image  src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/800px-Ethereum-icon-purple.svg.png" style={imgStyle} /></a>
+       <Link href="/"><Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/800px-Ethereum-icon-purple.svg.png" style={imgStyle} /></Link>
       
        
 

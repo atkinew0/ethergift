@@ -4,23 +4,32 @@ import { Container } from "semantic-ui-react";
 import Head from 'next/head';
 
 const footStyle ={
+    position:"fixed",
+    padding:"10px 10px 0px 10px",
+    bottom:"0",
     height:"40px",
     backgroundColor:"black",
     backgroundImage:"linear-gradient(to bottom right, purple, black)",
-    marginTop:"20px"
+    marginTop:"20px",
+    width:"100%"
 }
 
-export default (props) => {
+const Layout = (props) => {
     return (
 
-        <Container>
+        <div>
             <Head>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
             </Head>
             <Header />
+            <Container >
             {props.children}
+            </Container>
             
             <div style={footStyle}></div>
-        </Container>
+        </div>
+        
     )
 };
+
+export default Layout;

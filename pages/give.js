@@ -48,8 +48,8 @@ class Give extends Component {
             error = true;
         }
 
-        if(this.state.value > .01 || this.state.value <= 0){
-            this.setState({amountError:"(Beta version) amount must be between 0 and .01 Ether"})
+        if(this.state.value > .1 || this.state.value <= 0){
+            this.setState({amountError:"(Beta version) amount must be between 0 and .1 Ether"})
             error = true;
         }
 
@@ -61,6 +61,10 @@ class Give extends Component {
         if(!web3.utils.isAddress(this.state.recipientAddress)){
             this.setState({addressError:"Recipient must be a valid Ethereum Address"})
             error = true;
+        }
+
+        if(this.state.unlockDate == 0){
+            this.setState({unlockDate: Math.floor(new Date().getTime()/1000)})
         }
 
 
@@ -116,7 +120,7 @@ class Give extends Component {
             this.setState({errorMessage:err.message});
         }
 
-        this.setState({loading:false, value:''});
+        this.setState({loading:false});
 
     }
 
@@ -128,64 +132,74 @@ class Give extends Component {
 
     renderDate(){
 
-        console.log("About to show datetimeform?", this.state.dateLocked)
         return (this.state.dateLocked? <DateTimeForm setState={(date)=>this.setState({unlockDate:date})}/> : null);
     }
 
 
     render(){
 
-        return (
-            <Layout>
-                <h1 style={{marginLeft:"40%"}}>Give Ether</h1>
+        if(this.state.giftSent){
 
-                <Form error={!!this.state.errorMessage} onSubmit={this.onSubmit}>
-                    <Form.Field error={!!this.state.toError}>
-                        <label>From:</label>
-                        <Input onChange={event => this.setState({to:event.target.value})} value={this.state.to}/>
+            return (
+                <Giftcard propObj={this.state}/>
+            )
+        }else{
+            
+                return (
+                    <Layout>
+                        <h1 style={{marginLeft:"40%"}}>Give Ether</h1>
+        
+                        <Form error={!!this.state.errorMessage} onSubmit={this.onSubmit}>
+                            <Form.Field error={!!this.state.toError}>
+                                <label>From:</label>
+                                <Input onChange={event => this.setState({to:event.target.value})} value={this.state.to}/>
+        
+                            </Form.Field>
+                            <Form.Field error={!!this.state.toError}>
+                                <label>Recipients Name:</label>
+                                <Input onChange={event => this.setState({from:event.target.value})} value={this.state.from}/>
+        
+                            </Form.Field>
+                            <Form.Field error={!!this.state.toError}>
+                                <label>Recipients wallet address:</label>
+                                <Input onChange={event => this.setState({recipientAddress:event.target.value})} value={this.state.recipientAddress}/>
+        
+                            </Form.Field>
+                            <Form.Field error={!!this.state.amountError}>
+                                <label>Amount:</label>
+                                < Input onChange={event => this.setState({value:event.target.value})} value={this.state.value} label="eth"/>
+        
+                            </Form.Field>
+                            <Form.Field>
+                                <Checkbox 
+                                onChange={event => this.setState({dateLocked: !this.state.dateLocked})}
+                                slider label="Lock gift until future date?"/>
+                                {this.renderDate()}
+                            </Form.Field>
+                            <Form.Field error={!!this.state.passwordError}>
+                                <label>Password (for recipient to unlock):</label>
+                                < Input onChange={event => this.setState({password:event.target.value})} value={this.state.password} />
+        
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Message:</label>
+                                <TextArea onChange={event => this.setState({message:event.target.value})} value={this.state.message} placeholder="Message to the recipient (optional)"/>
+        
+                            </Form.Field>
+                                <Button primary loading={this.state.loading}>
+                                    Send ETH
+                                </Button>
+                            
+                        </Form>
+                        
+                        <h1>{this.state.errorMessage}</h1>
+                    </Layout>
+                )
+            
+        }
 
-                    </Form.Field>
-                    <Form.Field error={!!this.state.toError}>
-                        <label>Recipients Name:</label>
-                        <Input onChange={event => this.setState({from:event.target.value})} value={this.state.from}/>
-
-                    </Form.Field>
-                    <Form.Field error={!!this.state.toError}>
-                        <label>Recipients wallet address:</label>
-                        <Input onChange={event => this.setState({recipientAddress:event.target.value})} value={this.state.recipientAddress}/>
-
-                    </Form.Field>
-                    <Form.Field error={!!this.state.amountError}>
-                        <label>Amount:</label>
-                        < Input onChange={event => this.setState({value:event.target.value})} value={this.state.value} label="eth"/>
-
-                    </Form.Field>
-                    <Form.Field>
-                        <Checkbox 
-                        onChange={event => this.setState({dateLocked: !this.state.dateLocked})}
-                        slider label="Lock gift until future date?"/>
-                        {this.renderDate()}
-                    </Form.Field>
-                    <Form.Field error={!!this.state.passwordError}>
-                        <label>Password (for recipient to unlock):</label>
-                        < Input onChange={event => this.setState({password:event.target.value})} value={this.state.password} />
-
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Message:</label>
-                        <TextArea onChange={event => this.setState({message:event.target.value})} value={this.state.message} placeholder="Message to the recipient (optional)"/>
-
-                    </Form.Field>
-                        <Button primary loading={this.state.loading}>
-                            Send ETH
-                        </Button>
-                    
-                </Form>
-                
-                <h1>{this.state.errorMessage}</h1>
-                {this.renderCard()}
-            </Layout>
-        )
+        
+        
     }
 }
 

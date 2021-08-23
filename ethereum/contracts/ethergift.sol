@@ -4,7 +4,7 @@ pragma solidity ^0.8.6;
 contract Ethergift {
 
     address manager;
-    uint256 maxcontrib;   //in test version limit gifts to .01 ETH ( 10000000000000000 wei)
+    uint256 maxcontrib;   //in test version limit gifts to .1 ETH ( 100000000000000000 wei)
     Gift[] public giftlist;
 
     struct Gift {

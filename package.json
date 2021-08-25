@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export",
+    "sync": "aws s3 sync out s3://ethergift/",
     "start": "next start",
     "lint": "next lint",
     "test": "mocha",

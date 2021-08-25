@@ -53,7 +53,7 @@ class Receive extends Component{
         if(this.validate()) return;
 
         this.setState({loading:true, errorMessage:''})
-        const contract = hookup(config.contract_address);
+        const contract = hookup(config.contract_address || "0x1F1158D388c7791a30B830685a5fF4418E570E3F");
 
         try {
             const accounts = await web3.eth.getAccounts();

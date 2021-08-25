@@ -22,7 +22,7 @@ const deploy = async () => {
     console.log("Attempting to deploy from account", accounts[0])
 
     const result = await new web3.eth.Contract(compiled.abi)
-    .deploy({data:compiled.evm.bytecode.object, arguments:[web3.utils.toWei(".1","ether")] })
+    .deploy({data:compiled.evm.bytecode.object, arguments:[web3.utils.toWei("1","ether")] })
     .send({ gas: '1000000', from: accounts[0]})
 
 

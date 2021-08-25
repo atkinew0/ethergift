@@ -42,7 +42,7 @@ class GiftCard extends react.Component {
                 <h3>Gift #:{this.props.propObj.giftNumber}</h3>
                 <h3>Gift amount: {this.props.propObj.value} eth</h3>
                 <h3>Password: {this.props.propObj.password}</h3>
-                <h3>Redeem at https://ethergift.io</h3>
+                <h3>Redeem at http://ethergift.s3-website-us-east-1.amazonaws.com/</h3>
                 <h4>(Print this page)</h4>
                 </div>
             </Container>

@@ -6,11 +6,18 @@ import web3 from '../ethereum/contracts/web3.js';
 import config from '../config.json';
 import Layout from "../components/Layout"
 
+interface IreceiveState {
+    giftNumber:number;
+    giftPassword:string;
+    recipient:string;
+    numError:string;
+    passwordError:string;
+    addressError:string;
+}
 
+class Receive extends Component<IreceiveState>{
 
-class Receive extends Component{
-
-    state = {
+    state: IreceiveState = {
         giftNumber:0,
         giftPassword:"",
         recipient:"",
@@ -23,7 +30,7 @@ class Receive extends Component{
 
         let error = false;
 
-        if(this.state.giftNumber === "" || this.state.giftNumber < 0){
+        if(this.state.giftNumber < 0){
             this.setState({numError:"Invalid gift number"})
             error = true;
         }

@@ -9,11 +9,29 @@ import Giftcard from '../components/Giftcard';
 import DateTimeForm from '../components/Date.js'
 import Layout from '../components/Layout'
 
+interface Igivestate {
+    value: string;
+    loading: boolean;
+    errorMessage:string;
+    password:string;
+    message:string;
+    giftNumber:number;
+    to:string;
+    from:string;
+    toError:string;
+    fromError:string;
+    amountError:string;
+    passwordError:string;
+    addressError:string;
+    recipientAddress:string;
+    unlockDate:number;
+    giftSent:boolean;
+    dateLocked:boolean;
+}
 
+class Give extends Component<Igivestate> {
 
-class Give extends Component {
-
-    state = {
+    state: Igivestate = {
         value:'',
         loading:false,
         errorMessage:'',
@@ -48,7 +66,7 @@ class Give extends Component {
             error = true;
         }
 
-        if(this.state.value > .1 || this.state.value <= 0){
+        if(parseInt(this.state.value) > 1 || parseInt(this.state.value) <= 0){
             this.setState({amountError:"(Beta version) amount must be between 0 and .1 Ether"})
             error = true;
         }
